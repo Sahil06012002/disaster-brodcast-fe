@@ -75,30 +75,33 @@ export default function Reports(props: ReportProps) {
   }
   return (
     <div>
-      <div className="flex justify-between">
-        <h1>{props.title}</h1>
-        <Button
-          onClick={() => {
-            setIsOpen(true);
-          }}
-        >
-          Add Reports
-        </Button>
-
-        <Modal
-          open={isOpen}
-          onClose={() => {
-            setIsOpen(false);
-          }}
-          onPositive={handleSubmit}
-          title="Add Reports"
-        >
-          <AddReportForm
-            ref={addReportFormRef}
-            disaster_id={props.disaster_id}
-          />
-        </Modal>
+      <div className="bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg p-6 mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+              {props.title}
+            </h1>
+            <p className="text-gray-600 mt-1">Community reports and updates</p>
+          </div>
+          <Button
+            onClick={() => {
+              setIsOpen(true);
+            }}
+          >
+            Add Reports
+          </Button>
+        </div>
       </div>
+      <Modal
+        open={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+        }}
+        onPositive={handleSubmit}
+        title="Add Reports"
+      >
+        <AddReportForm ref={addReportFormRef} disaster_id={props.disaster_id} />
+      </Modal>
       <div>
         {Array.isArray(reports) && reports.length > 0 ? (
           reports.map((report: DisasterReport) => {
