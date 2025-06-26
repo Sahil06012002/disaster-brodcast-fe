@@ -3,7 +3,6 @@ import apiClient from "../services/ApiClient";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Clock, MapPin, User, AlertTriangle, Eye, Plus } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
 import type { RegisterDisasterFormRef } from "@/components/RegisterDisasterForm";
 import RegisterDisasterForm from "@/components/RegisterDisasterForm";
@@ -121,10 +120,10 @@ export default function DisasterList() {
         <div className="bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg p-6 mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <Input type="email" placeholder="Email" />
-              {/* <p className="text-gray-600 mt-1">
-                Community reports and updates
-              </p> */}
+              {/* <Input type="email" placeholder="Email" /> */}
+              <p className="text-gray-600 text-lg font-bold mt-1">
+                Recent Disasters
+              </p>
             </div>
             <Button
               className="bg-red-700"
@@ -190,7 +189,7 @@ export default function DisasterList() {
                   </div>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+                <p className="text-gray-700 leading-relaxed mb-6 text-lg line-clamp-6">
                   {disaster.description}
                 </p>
 

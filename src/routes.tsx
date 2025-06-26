@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import DisasterList from "./pages/DisasterList";
 import DisasterDetail from "./pages/DisasterDetail";
+import About from "./pages/About";
 
 const router = createBrowserRouter([
   // Login as the default route (no layout)
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/app/disaster-detail",
         element: <DisasterDetail />,
+      },
+      {
+        path: "/app/about",
+        element: <About></About>,
       },
     ],
   },

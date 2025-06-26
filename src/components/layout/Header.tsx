@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 
 import { ShieldAlert } from "lucide-react";
@@ -15,6 +16,7 @@ export default function Header() {
   //     }
   //   }
   // };
+  const navigate = useNavigate();
 
   return (
     <header className="flex items-center justify-between px-8 py-4 bg-gray-100 border-b border-gray-200">
@@ -32,7 +34,13 @@ export default function Header() {
         </div>
       </a>
       <div className="flex items-center gap-6">
-        <Button className="bg-red-700" variant="destructive" onClick={() => {}}>
+        <Button
+          className="bg-red-700"
+          variant="destructive"
+          onClick={() => {
+            navigate("/app/about");
+          }}
+        >
           <div className="flex items-center gap-2">
             <div className="p-1 bg-white/20 rounded-full group-hover:bg-white/30 transition-colors duration-300">
               {/* <Plus className="w-4 h-4" strokeWidth={2.5} /> */}
