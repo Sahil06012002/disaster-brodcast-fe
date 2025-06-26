@@ -7,18 +7,16 @@ import DisasterDetail from "./pages/DisasterDetail";
 import About from "./pages/About";
 
 const router = createBrowserRouter([
-  // Login as the default route (no layout)
   {
     path: "/",
     element: <Login />,
   },
-  // All other routes with layout
   {
     path: "/app",
     element: <Layout />,
     children: [
       {
-        path: "/app", // or use index: true
+        path: "/app",
         element: <DisasterList />,
       },
       {

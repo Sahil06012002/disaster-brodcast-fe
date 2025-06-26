@@ -205,7 +205,7 @@ export default function About() {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => navigate("/app")}
+                  onClick={() => navigate("/home")}
                   className="px-8 py-3 text-lg font-semibold bg-white/5 border-white/20 text-white hover:bg-white/10 rounded-xl transition-all duration-300"
                 >
                   View Live Reports
