@@ -26,18 +26,18 @@ export default function Login() {
         <div className="flex flex-col justify-center h-screen w-full px-12 text-white">
           <h1 className="text-6xl font-bold  mb-4">
             <p>Stay Informed. Act Fast. </p>
-            <p>Save Lives.</p>
+            Save <span className="text-red-500">Lives.</span>
           </h1>
           <p className="w-[50%] mb-4">
             Disaster Brodcaster is your real-time hub for reporting and tracking
             natural calamities. Empower communities by sharing verified updates,
             images, and eyewitness accounts to help authorities and citizens{" "}
           </p>
-          <div className="flex justify-center items-center w-full max-w-md gap-2">
+          <div className="flex justify-center items-center w-full max-w-md gap-10">
             <Input
               type="email"
               placeholder="Enter your Name"
-              className="flex-1 px-5 py-3 text-lg bg-transparent text-white placeholder-white border border-white"
+              className="flex-1 px-5 py-3 rounded-0 text-lg bg-transparent text-white placeholder-white border-0 border-b border-white focus:outline-none focus:ring-0"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -47,7 +47,7 @@ export default function Login() {
               onClick={handleCheckIn}
               className="px-6 py-3 text-lg text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-md shadow-md hover:bg-white/20 transition"
             >
-              Check In
+              Check In →
             </Button>
           </div>
         </div>
