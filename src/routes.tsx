@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
-import RegisterDisasterForm from "./components/RegisterDisasterForm";
 import Login from "./pages/Login";
 import DisasterList from "./pages/DisasterList";
 import DisasterDetail from "./pages/DisasterDetail";
@@ -26,8 +25,8 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/app/register-disaster",
-        element: <RegisterDisasterForm />,
+        // path: "/app/register-disaster",
+        // element: <RegisterDisasterForm />,
       },
       {
         path: "/app/disaster-detail",

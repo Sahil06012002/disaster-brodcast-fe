@@ -13,6 +13,7 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { forwardRef, useImperativeHandle } from "react";
 import apiClient from "@/services/ApiClient";
+import type { Disaster } from "@/pages/DisasterList";
 
 const tagsRegex = /^#\w+( #\w+)*$/;
 
@@ -39,110 +40,128 @@ const defaultValues = {
 export interface RegisterDisasterFormRef {
   submit: () => Promise<boolean>;
 }
+export interface RegisterDisasterFormInterface {
+  disaster: Disaster[];
+  setDisaster: React.Dispatch<React.SetStateAction<Disaster[]>>;
+}
 
-const RegisterDisasterForm = forwardRef<RegisterDisasterFormRef>(
-  (_props, ref) => {
-    const form = useForm<z.infer<typeof DisasterSchema>>({
-      resolver: zodResolver(DisasterSchema),
-      defaultValues,
-    });
+const RegisterDisasterForm = forwardRef<
+  RegisterDisasterFormRef,
+  RegisterDisasterFormInterface
+>((props, ref) => {
+  const form = useForm<z.infer<typeof DisasterSchema>>({
+    resolver: zodResolver(DisasterSchema),
+    defaultValues,
+  });
 
-    const onSubmit = (data: z.infer<typeof DisasterSchema>) => {
-      const user_id = parseInt(localStorage.getItem("user_id") || "", 10);
-      const tagsArray = data.tags.trim().split(/\s+/);
+  const onSubmit = async (data: z.infer<typeof DisasterSchema>) => {
+    const user_id = parseInt(localStorage.getItem("user_id") || "", 10);
+    const tagsArray = data.tags.trim().split(/\s+/);
 
-      const payload = { user_id, ...data, tags: tagsArray };
+    const payload = { user_id, ...data, tags: tagsArray };
 
-      apiClient.post("/disasters", payload).then((res) => {
-        console.log(res);
-      });
-    };
+    const response = await apiClient.post("/disasters", payload);
+    const resData = response.data.data;
+    if (resData) {
+      const newDisaster: Disaster = {
+        id: resData.id,
+        title: resData.title,
+        location: resData.location,
+        description: resData.description,
+        tags: resData.tags,
+        created_at: resData.created_at,
+        updated_at: resData.updated_at,
+        userName: resData.Users.name,
+      };
 
-    useImperativeHandle(ref, () => ({
-      submit: async () => {
-        const isValid = await form.trigger();
-        if (isValid) {
-          const data = form.getValues();
-          onSubmit(data);
-          return true;
-        }
-        return false;
-      },
-    }));
+      props.setDisaster([newDisaster, ...props.disaster]);
+    }
+  };
 
-    return (
-      <div className="w-full max-w-2xl mx-auto">
-        {/* <h2 className="text-2xl font-semibold mb-4 text-gray-800 text-center">
+  useImperativeHandle(ref, () => ({
+    submit: async () => {
+      const isValid = await form.trigger();
+      if (isValid) {
+        const data = form.getValues();
+        onSubmit(data);
+        return true;
+      }
+      return false;
+    },
+  }));
+
+  return (
+    <div className="w-full max-w-2xl mx-auto">
+      {/* <h2 className="text-2xl font-semibold mb-4 text-gray-800 text-center">
           Register Disaster
         </h2> */}
-        <Form {...form}>
-          <form className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="e.g., Flood in Mumbai" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Location</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="e.g., Mumbai, India" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
+      <Form {...form}>
+        <form className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="description"
+              name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Textarea
-                      {...field}
-                      placeholder="Describe the disaster details..."
-                      className="min-h-[8rem]"
-                    />
+                    <Input {...field} placeholder="e.g., Flood in Mumbai" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name="tags"
+              name="location"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tags</FormLabel>
+                  <FormLabel>Location</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="#flood #mumbai #2025" />
+                    <Input {...field} placeholder="e.g., Mumbai, India" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </form>
-        </Form>
-      </div>
-    );
-  }
-);
+          </div>
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    placeholder="Describe the disaster details..."
+                    className="min-h-[8rem]"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tags</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="#flood #mumbai #2025" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+    </div>
+  );
+});
 
 RegisterDisasterForm.displayName = "RegisterDisasterForm";
 

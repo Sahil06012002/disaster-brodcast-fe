@@ -11,7 +11,8 @@ interface ReportProps {
   disaster_id: number;
   title: string;
 }
-interface DisasterReport {
+
+export interface DisasterReport {
   id: number;
   user_id: number;
   disaster_id: number;
@@ -45,17 +46,29 @@ export default function Reports(props: ReportProps) {
       }
     };
     fetchReports();
-    console.log("reports data", reports);
-  }, []);
+  }, [props.disaster_id]);
 
   const addReportFormRef = useRef<AddReportFormRef>(null);
+
   const handleSubmit = async () => {
     if (addReportFormRef.current) {
       const isValid = await addReportFormRef.current?.submit();
       if (isValid) {
         setIsOpen(false);
+        try {
+          const response = await apiClient.get(
+            `reports?disaster_id=${props.disaster_id}`
+          );
+          setReports(response.data.data);
+        } catch (err) {
+          console.error("Failed to refresh reports:", err);
+        }
       }
     }
+  };
+
+  const addNewReport = (newReport: DisasterReport) => {
+    setReports((prevReports) => [newReport, ...prevReports]);
   };
 
   if (loading) {
@@ -73,6 +86,7 @@ export default function Reports(props: ReportProps) {
       </div>
     );
   }
+
   return (
     <div>
       <div className="bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg p-6 mb-8">
@@ -92,6 +106,7 @@ export default function Reports(props: ReportProps) {
           </Button>
         </div>
       </div>
+
       <Modal
         open={isOpen}
         onClose={() => {
@@ -100,8 +115,13 @@ export default function Reports(props: ReportProps) {
         onPositive={handleSubmit}
         title="Add Reports"
       >
-        <AddReportForm ref={addReportFormRef} disaster_id={props.disaster_id} />
+        <AddReportForm
+          ref={addReportFormRef}
+          disaster_id={props.disaster_id}
+          onReportAdded={addNewReport}
+        />
       </Modal>
+
       <div>
         {Array.isArray(reports) && reports.length > 0 ? (
           reports.map((report: DisasterReport) => {

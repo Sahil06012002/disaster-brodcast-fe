@@ -1,23 +1,20 @@
 import { Button } from "../ui/button";
-import { Modal } from "../ui/modal";
-import { useRef, useState } from "react";
-import RegisterDisasterForm from "../RegisterDisasterForm";
-import type { RegisterDisasterFormRef } from "../RegisterDisasterForm";
-import { Plus, ShieldAlert } from "lucide-react";
+
+import { ShieldAlert } from "lucide-react";
 
 export default function Header() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const formRef = useRef<RegisterDisasterFormRef>(null);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const formRef = useRef<RegisterDisasterFormRef>(null);
 
-  const handleSubmit = async () => {
-    if (formRef.current) {
-      const isValid = await formRef.current.submit();
-      console.log("isValid", isValid);
-      if (isValid) {
-        setIsModalOpen(false);
-      }
-    }
-  };
+  // const handleSubmit = async () => {
+  //   if (formRef.current) {
+  //     const isValid = await formRef.current.submit();
+  //     console.log("isValid", isValid);
+  //     if (isValid) {
+  //       setIsModalOpen(false);
+  //     }
+  //   }
+  // };
 
   return (
     <header className="flex items-center justify-between px-8 py-4 bg-gray-100 border-b border-gray-200">
@@ -35,20 +32,16 @@ export default function Header() {
         </div>
       </a>
       <div className="flex items-center gap-6">
-        <Button
-          className="bg-red-700"
-          variant="destructive"
-          onClick={() => setIsModalOpen(true)}
-        >
+        <Button className="bg-red-700" variant="destructive" onClick={() => {}}>
           <div className="flex items-center gap-2">
             <div className="p-1 bg-white/20 rounded-full group-hover:bg-white/30 transition-colors duration-300">
-              <Plus className="w-4 h-4" strokeWidth={2.5} />
+              {/* <Plus className="w-4 h-4" strokeWidth={2.5} /> */}
             </div>
-            <span>Register Disaster</span>
+            <span>About Us</span>
           </div>
         </Button>
 
-        <Modal
+        {/* <Modal
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           title="Register Disaster"
@@ -58,7 +51,7 @@ export default function Header() {
           onNegative={() => setIsModalOpen(false)}
         >
           <RegisterDisasterForm ref={formRef} />
-        </Modal>
+        </Modal> */}
       </div>
     </header>
   );

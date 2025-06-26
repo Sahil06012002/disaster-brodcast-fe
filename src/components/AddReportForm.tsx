@@ -17,16 +17,19 @@ import { Textarea } from "./ui/textarea";
 import { X } from "lucide-react";
 import apiClient from "@/services/ApiClient";
 import type { UploadUrlReponse } from "@/interfaces/UploadUrlResponse";
+import type { DisasterReport } from "./ui/Reports";
+import { BLOB_URL } from "@/const";
 
 export interface AddReportFormRef {
   submit: () => Promise<boolean>;
 }
 
-interface AddReportFormProp {
+interface AddReportFormProps {
   disaster_id: number;
+  onReportAdded?: (newReport: DisasterReport) => void;
 }
 
-const AddReportForm = forwardRef<AddReportFormRef, AddReportFormProp>(
+const AddReportForm = forwardRef<AddReportFormRef, AddReportFormProps>(
   (_props, ref) => {
     const uploadReportSchema = z.object({
       title: z.string().min(1, "Title is required"),
@@ -89,7 +92,26 @@ const AddReportForm = forwardRef<AddReportFormRef, AddReportFormProp>(
         image_link: image_link,
       };
 
-      apiClient.post("reports", addReportData);
+      const response = await apiClient.post("reports", addReportData);
+
+      if (response.data && _props.onReportAdded) {
+        const reportData = response.data;
+        const images = reportData.image_link
+          ? reportData.image_link
+              .split("|")
+              .map((image: string) => BLOB_URL + image)
+          : [];
+        const newReport: DisasterReport = {
+          id: reportData.id,
+          user_id: reportData.user_id,
+          disaster_id: reportData.disaster_id,
+          title: reportData.title,
+          description: reportData.description,
+          images: images,
+          user_name: reportData.Users?.name || "Unknown User",
+        };
+        _props.onReportAdded(newReport);
+      }
     };
 
     useImperativeHandle(ref, () => ({

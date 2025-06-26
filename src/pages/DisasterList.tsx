@@ -1,10 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import apiClient from "../services/ApiClient";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Clock, MapPin, User, AlertTriangle, Eye } from "lucide-react";
+import { Clock, MapPin, User, AlertTriangle, Eye, Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Modal } from "@/components/ui/modal";
+import type { RegisterDisasterFormRef } from "@/components/RegisterDisasterForm";
+import RegisterDisasterForm from "@/components/RegisterDisasterForm";
 
-interface Disaster {
+export interface Disaster {
   id: number;
   title: string;
   location: string;
@@ -20,6 +24,18 @@ export default function DisasterList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const formRef = useRef<RegisterDisasterFormRef>(null);
+
+  const handleSubmit = async () => {
+    if (formRef.current) {
+      const isValid = await formRef.current.submit();
+      console.log("isValid", isValid);
+      if (isValid) {
+        setIsModalOpen(false);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchDisasters = async () => {
@@ -75,7 +91,6 @@ export default function DisasterList() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50/30">
-      {/* Header Section */}
       <div className="relative overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-orange-500 text-white">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0 overflow-hidden">
@@ -102,7 +117,46 @@ export default function DisasterList() {
         </div>
       </div>
 
-      {/* Disasters Grid */}
+      <div className="container mx-auto p-6">
+        <div className="bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg p-6 mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <Input type="email" placeholder="Email" />
+              {/* <p className="text-gray-600 mt-1">
+                Community reports and updates
+              </p> */}
+            </div>
+            <Button
+              className="bg-red-700"
+              variant="destructive"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <div className="flex items-center gap-2">
+                <div className="p-1 bg-white/20 rounded-full group-hover:bg-white/30 transition-colors duration-300">
+                  <Plus className="w-4 h-4" strokeWidth={2.5} />
+                </div>
+                <span>Register Disaster</span>
+              </div>
+            </Button>
+          </div>
+        </div>
+      </div>
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Register Disaster"
+        positiveLabel="Submit"
+        onPositive={handleSubmit}
+        negativeLabel="Cancel"
+        onNegative={() => setIsModalOpen(false)}
+      >
+        <RegisterDisasterForm
+          disaster={disasters}
+          setDisaster={setDisasters}
+          ref={formRef}
+        />
+      </Modal>
+
       <div className="container mx-auto px-6 py-12">
         {disasters.length === 0 ? (
           <div className="text-center py-16">
@@ -121,7 +175,6 @@ export default function DisasterList() {
                 className="group bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                {/* Header */}
                 <div className="flex items-start gap-4 mb-6">
                   <div className="p-3 bg-red-100 rounded-xl">
                     <AlertTriangle className="w-6 h-6 text-red-500" />
@@ -137,24 +190,21 @@ export default function DisasterList() {
                   </div>
                 </div>
 
-                {/* Description */}
                 <p className="text-gray-700 leading-relaxed mb-6 text-lg">
                   {disaster.description}
                 </p>
 
-                {/* Tags */}
                 <div className="flex flex-wrap gap-2 mb-6">
                   {disaster.tags.map((tag) => (
                     <span
                       key={tag}
                       className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gradient-to-r from-red-50 to-orange-50 text-red-700 border border-red-200/50"
                     >
-                      #{tag}
+                      {tag}
                     </span>
                   ))}
                 </div>
 
-                {/* Footer */}
                 <div className="flex items-center justify-between pt-6 border-t border-gray-200/50">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
