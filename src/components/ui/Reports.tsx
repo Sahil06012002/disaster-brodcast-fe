@@ -74,7 +74,7 @@ export default function Reports(props: ReportProps) {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-[80vh] text-gray-500 text-lg">
-        Loading disasters...
+        Loading User Reports...
       </div>
     );
   }
